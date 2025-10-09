@@ -210,7 +210,10 @@ MonoBehaviour:
   moveSpeed: 5
   rotationSpeed: 200
   rb: {fileID: 7506232287645387295}
-  bulletPrefab: {fileID: 7844772155310418951, guid: d888e1c8d16834c5c8071d955336b1ed,
+  singleShotBulletPrefab: {fileID: 7844772155310418951, guid: d888e1c8d16834c5c8071d955336b1ed,
+    type: 3}
+  doubleShotBulletPrefab: {fileID: 7844772155310418951, guid: 99c9f32ea1e4048a68ed36042ba5c405,
     type: 3}
   bulletSpawn: {fileID: 2777419834004808025}
-  fireCooldown: 1
+  shotOffSet: 0.5
+  fireCooldown: 0.3
