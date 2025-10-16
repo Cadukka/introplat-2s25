@@ -14,7 +14,7 @@ public class SmallAsteroidController : MonoBehaviour
     public void Initialize(AsteroidController big)
     {
         bigAsteroid = big;
-        moveDirection = bigAsteroid.moveDirection + Quaternion.Angle(moveDirection);
+        //moveDirection = bigAsteroid.moveDirection + Quaternion.Angle(moveDirection);
 
         _rotationSpeed = Random.Range(-100f, 100f);
     }
