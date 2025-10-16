@@ -16,7 +16,22 @@ public class ShipController : MonoBehaviour
     //Shooting
     public float fireCooldown = 1f;
     private float _cooldownTimer;
-    
+
+    //DoubleSpeed
+    float doubleSpeed;
+    float initialSpeed;
+
+    //ForceField
+    [SerializeField] GameObject forceField;
+    [SerializeField] float timerFieldInitial;
+    float timerField;
+    private void Start()
+    {
+        doubleSpeed = moveSpeed * 2; //Define Double Speed as the souble of initial speed
+        initialSpeed = moveSpeed; //Define initial speed, to get it back later
+        forceField.SetActive(false); //Shield is deactivated
+        timerField = timerFieldInitial;
+    }
     void Update()
     {
         _moveInput = Input.GetAxis("Vertical");
@@ -33,6 +48,22 @@ public class ShipController : MonoBehaviour
         {
             _cooldownTimer = fireCooldown; // Reset cooldown
             Instantiate(bulletPrefab, bulletSpawn.position, transform.rotation);
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) )
+        {
+            moveSpeed = doubleSpeed;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
+        {
+            moveSpeed = initialSpeed;
+        }
+
+        // Timer for ForceField
+        timerField -= Time.deltaTime;
+        if(timerField <= 0)
+        {
+            forceField.SetActive(false);
         }
     }
     
@@ -54,7 +85,20 @@ public class ShipController : MonoBehaviour
         {
             Debug.Log("Collided with an asteroid!");
             Destroy(other.gameObject);
+
+            if(forceField.gameObject.activeInHierarchy)
+            {
+                forceField.SetActive(false);
+                return;
+            }
             Destroy(gameObject);
+        }
+
+
+        if (other.CompareTag("Invincible"))
+        {
+            timerField = timerFieldInitial;
+            forceField.SetActive(true);
         }
     }
 }
