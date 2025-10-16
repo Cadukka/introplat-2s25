@@ -11,9 +11,11 @@ public class SmallAsteroidController : MonoBehaviour
     // Reference of Big Asteroid
     AsteroidController bigAsteroid;
     
-    void Start()
+    public void Initialize(AsteroidController big)
     {
-        moveDirection = bigAsteroid.moveDirection * new Vector2(45,45);
+        bigAsteroid = big;
+        moveDirection = bigAsteroid.moveDirection + Quaternion.Angle(moveDirection);
+
         _rotationSpeed = Random.Range(-100f, 100f);
     }
 

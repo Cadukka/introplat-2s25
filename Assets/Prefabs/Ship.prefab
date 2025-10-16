@@ -212,10 +212,11 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7844772155310418951, guid: d888e1c8d16834c5c8071d955336b1ed,
     type: 3}
   bulletSpawn: {fileID: 2777419834004808025}
-  forceField: {fileID: 8727287694272280983}
   moveSpeed: 5
   rotationSpeed: 200
   fireCooldown: 0.3
+  forceField: {fileID: 8727287694272280983}
+  timerFieldInitial: 0
 --- !u!1 &8727287694272280983
 GameObject:
   m_ObjectHideFlags: 0

@@ -179,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  life: 2
   rb: {fileID: 697741603278632108}
   moveDirection: {x: 0, y: 0}
   smallAsteroid: {fileID: 2007613050741217006, guid: 2e426436dc3cb834f86767a25cefdc9a,
