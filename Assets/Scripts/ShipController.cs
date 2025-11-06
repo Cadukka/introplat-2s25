@@ -12,26 +12,17 @@ public class ShipController : MonoBehaviour
     public float rotationSpeed = 200f;
     private float _moveInput = 0;
     private float _rotationInput = 0;
+    private float _currentSpeed;
     
     //Shooting
     public float fireCooldown = 1f;
     private float _cooldownTimer;
-
-    //DoubleSpeed
-    float doubleSpeed;
-    float initialSpeed;
-
-    //ForceField
-    [SerializeField] GameObject forceField;
-    [SerializeField] float timerFieldInitial;
-    float timerField;
-    private void Start()
-    {
-        doubleSpeed = moveSpeed * 2; //Define Double Speed as the souble of initial speed
-        initialSpeed = moveSpeed; //Define initial speed, to get it back later
-        forceField.SetActive(false); //Shield is deactivated
-        timerField = timerFieldInitial;
-    }
+    
+    //Power-Ups
+    public bool isInvincible = false;
+    public float invincibilityDuration = 5f;
+    private float _invincibilityTimer;
+    
     void Update()
     {
         _moveInput = Input.GetAxis("Vertical");
@@ -42,6 +33,16 @@ public class ShipController : MonoBehaviour
         {
             _cooldownTimer -= Time.deltaTime;
         }
+
+        if (isInvincible)
+        {
+            _invincibilityTimer -= Time.deltaTime;
+            if (_invincibilityTimer <= 0)
+            {
+                isInvincible = false;
+                GetComponent<SpriteRenderer>().color = Color.cyan;
+            }
+        }
         
         //Shoot
         if (Input.GetKeyDown(KeyCode.Space) && _cooldownTimer <= 0)
@@ -50,27 +51,18 @@ public class ShipController : MonoBehaviour
             Instantiate(bulletPrefab, bulletSpawn.position, transform.rotation);
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) )
+        //Double speed when Left Shift is held
+        _currentSpeed = moveSpeed;
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            moveSpeed = doubleSpeed;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
-        {
-            moveSpeed = initialSpeed;
-        }
-
-        // Timer for ForceField
-        timerField -= Time.deltaTime;
-        if(timerField <= 0)
-        {
-            forceField.SetActive(false);
+            _currentSpeed = moveSpeed * 2;
         }
     }
     
     void FixedUpdate()
     {
         // Move the ship forward/backward
-        Vector2 moveDirection = transform.up * _moveInput * moveSpeed * Time.fixedDeltaTime;
+        Vector2 moveDirection = transform.up * _moveInput * _currentSpeed * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + moveDirection);
 
         // Rotate the ship
@@ -80,25 +72,25 @@ public class ShipController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Check for collision with asteroids
-        if (other.CompareTag("Asteroid"))
+        // if (other.CompareTag("Asteroid"))
+        // {
+        //     Debug.Log("Collided with Asteroid!");
+        //     Destroy(other.gameObject); //Destroy the player ship
+        //     
+        //     if(!isInvincible)
+        //     {
+        //         Destroy(gameObject); //Destroy the asteroid
+        //     }
+        // }
+        
+        if (other.CompareTag("PowerUp"))
         {
-            Debug.Log("Collided with an asteroid!");
+            Debug.Log("Collected a Power-Up!");
             Destroy(other.gameObject);
-
-            if(forceField.gameObject.activeInHierarchy)
-            {
-                forceField.SetActive(false);
-                return;
-            }
-            Destroy(gameObject);
-        }
-
-
-        if (other.CompareTag("Invincible"))
-        {
-            timerField = timerFieldInitial;
-            forceField.SetActive(true);
+            isInvincible = true;
+            _invincibilityTimer = invincibilityDuration;
+            
+            GetComponent<SpriteRenderer>().color = Color.yellow;
         }
     }
 }
